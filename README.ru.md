@@ -35,6 +35,43 @@ $codex-task-authoring Проверь эту backend-задачу на пробе
 
 ## Установка
 
+### Установка через skills.sh из удалённого репозитория
+
+В терминале выполните:
+
+```powershell
+npx skills add d1ms1m/codex-task-authoring-skill --skill codex-task-authoring --global --agent codex
+```
+
+Клонировать репозиторий или открывать skills.sh не нужно. [Skills CLI](https://github.com/antfu/skills-cli) скачает skill прямо из этого GitHub-репозитория. `--global` делает skill доступным во всех проектах Codex; уберите флаг, чтобы установить его только в текущий проект. `--agent codex` устанавливает skill только для Codex.
+
+Для установки на уровне проекта уберите `--global`:
+
+```powershell
+npx skills add d1ms1m/codex-task-authoring-skill --skill codex-task-authoring --agent codex
+```
+
+### Установка через skills.sh из локальной копии
+
+Выполняйте эти команды из корня локальной копии:
+
+```powershell
+npx skills add . --skill codex-task-authoring --global --agent codex
+```
+
+`--global` делает skill доступным во всех проектах Codex; уберите флаг, чтобы установить его только в текущий проект. `--agent codex` устанавливает skill только для Codex.
+
+```powershell
+npx skills add . --skill codex-task-authoring --agent codex
+```
+
+Skills CLI не является продуктом OpenAI. Перед глобальной установкой проверьте его исходный код и diff выпуска. Для любого варианта установки через Skills CLI используйте следующие команды, чтобы проверить наличие обновлений и установить их:
+
+```powershell
+npx skills check
+npx skills update
+```
+
 ### Установка в Codex из GitHub
 
 В сообщении Codex запустите:
@@ -50,27 +87,6 @@ $skill-installer Install the skill from https://github.com/d1ms1m/codex-task-aut
 ```
 
 Skill станет доступен в следующем сообщении. Если он не появился, перезапустите Codex. Подробнее — в официальной документации OpenAI [Build skills](https://learn.chatgpt.com/docs/build-skills).
-
-### Установка из локального клона
-
-Если репозиторий уже клонирован, из его корня независимый community-инструмент [Skills CLI](https://github.com/antfu/skills-cli) может глобально установить только этот skill для Codex:
-
-```powershell
-npx skills add . --skill codex-task-authoring -g -a codex -y
-```
-
-Для установки на уровне проекта уберите `-g`:
-
-```powershell
-npx skills add . --skill codex-task-authoring -a codex -y
-```
-
-Skills CLI не является продуктом OpenAI. Перед глобальной установкой проверьте его исходный код и diff выпуска. Актуальные команды обновления:
-
-```powershell
-npx skills check
-npx skills update
-```
 
 Codex поддерживает автономные skills. Текущие рекомендации OpenAI предпочитают plugin-упаковку для широкого распространения переиспользуемых skills; такая упаковка намеренно не входит в scope версии `0.1.x` этого репозитория.
 

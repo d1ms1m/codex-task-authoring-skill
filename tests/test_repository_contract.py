@@ -138,7 +138,7 @@ class RepositoryContractTests(unittest.TestCase):
         self.assertIn("0.1.0", changelog.read_text(encoding="utf-8"))
         self.assertIn("MIT License", license_file.read_text(encoding="utf-8"))
 
-    def test_readmes_separate_codex_and_local_installation(self) -> None:
+    def test_readmes_order_remote_local_and_codex_installation(self) -> None:
         english_text = (ROOT / "README.md").read_text(encoding="utf-8")
         russian_text = (ROOT / "README.ru.md").read_text(encoding="utf-8")
         github_master_url = (
@@ -152,9 +152,17 @@ class RepositoryContractTests(unittest.TestCase):
             f"$skill-installer Install the skill from {github_master_url}",
             f"$skill-installer Install the skill from {github_tag_url}",
         )
+        remote_commands = (
+            "npx skills add d1ms1m/codex-task-authoring-skill "
+            "--skill codex-task-authoring --global --agent codex",
+            "npx skills add d1ms1m/codex-task-authoring-skill "
+            "--skill codex-task-authoring --agent codex",
+        )
         local_commands = (
-            "npx skills add . --skill codex-task-authoring -g -a codex -y",
-            "npx skills add . --skill codex-task-authoring -a codex -y",
+            "npx skills add . --skill codex-task-authoring --global --agent codex",
+            "npx skills add . --skill codex-task-authoring --agent codex",
+        )
+        cli_update_commands = (
             "npx skills check",
             "npx skills update",
         )
@@ -162,8 +170,21 @@ class RepositoryContractTests(unittest.TestCase):
         installation_cases = (
             (
                 english_text,
+                "### Install via skills.sh from a remote repository",
+                "### Install via skills.sh from a local copy",
                 "### Install in Codex from GitHub",
-                "### Install from a local clone",
+                (
+                    "No local clone or visit to skills.sh is required.",
+                    "`--global` makes the skill available in every Codex project; "
+                    "omit it to install only in the current project.",
+                    "`--agent codex` installs it for Codex only.",
+                ),
+                (
+                    "root of a local copy",
+                    "`--global` makes the skill available in every Codex project; "
+                    "omit it to install only in the current project.",
+                    "`--agent codex` installs it for Codex only.",
+                ),
                 (
                     "In a Codex message, run:",
                     "To pin the version",
@@ -175,8 +196,21 @@ class RepositoryContractTests(unittest.TestCase):
             ),
             (
                 russian_text,
+                "### Установка через skills.sh из удалённого репозитория",
+                "### Установка через skills.sh из локальной копии",
                 "### Установка в Codex из GitHub",
-                "### Установка из локального клона",
+                (
+                    "Клонировать репозиторий или открывать skills.sh не нужно.",
+                    "`--global` делает skill доступным во всех проектах Codex; "
+                    "уберите флаг, чтобы установить его только в текущий проект.",
+                    "`--agent codex` устанавливает skill только для Codex.",
+                ),
+                (
+                    "корня локальной копии",
+                    "`--global` делает skill доступным во всех проектах Codex; "
+                    "уберите флаг, чтобы установить его только в текущий проект.",
+                    "`--agent codex` устанавливает skill только для Codex.",
+                ),
                 (
                     "В сообщении Codex запустите:",
                     "Чтобы зафиксировать версию",
@@ -189,21 +223,39 @@ class RepositoryContractTests(unittest.TestCase):
         )
         for (
             text,
-            codex_heading,
+            remote_heading,
             local_heading,
+            codex_heading,
+            remote_prose,
+            local_prose,
             codex_prose,
             obsolete_prose,
             local_disclaimer,
         ) in installation_cases:
-            self.assertIn(codex_heading, text)
+            self.assertIn(remote_heading, text)
             self.assertIn(local_heading, text)
-            self.assertLess(text.index(codex_heading), text.index(local_heading))
+            self.assertIn(codex_heading, text)
+            self.assertLess(text.index(remote_heading), text.index(local_heading))
+            self.assertLess(text.index(local_heading), text.index(codex_heading))
 
-            after_codex_heading = text.split(codex_heading, 1)[1]
-            codex_section, after_local_heading = after_codex_heading.split(
+            after_remote_heading = text.split(remote_heading, 1)[1]
+            remote_section, after_local_heading = after_remote_heading.split(
                 local_heading, 1
             )
-            local_section = after_local_heading.split("\n## ", 1)[0]
+            local_section, after_codex_heading = after_local_heading.split(
+                codex_heading, 1
+            )
+            codex_section = after_codex_heading.split("\n## ", 1)[0]
+
+            for marker in (*remote_commands, *remote_prose):
+                self.assertIn(marker, remote_section)
+            self.assertNotIn("npx skills add .", remote_section)
+            self.assertNotIn("$skill-installer", remote_section)
+
+            for marker in (*local_commands, *local_prose, *cli_update_commands):
+                self.assertIn(marker, local_section)
+            self.assertNotIn("d1ms1m/codex-task-authoring-skill", local_section)
+            self.assertNotIn("$skill-installer", local_section)
 
             for marker in (*codex_prompts, *codex_prose):
                 self.assertIn(marker, codex_section)
@@ -211,9 +263,7 @@ class RepositoryContractTests(unittest.TestCase):
             self.assertNotIn(obsolete_prose, codex_section)
             self.assertNotIn("npx skills add", codex_section)
 
-            for marker in (*local_commands, local_disclaimer):
-                self.assertIn(marker, local_section)
-            self.assertNotIn("$skill-installer", local_section)
+            self.assertIn(local_disclaimer, local_section)
 
     def test_local_markdown_links_resolve(self) -> None:
         failures: list[str] = []
