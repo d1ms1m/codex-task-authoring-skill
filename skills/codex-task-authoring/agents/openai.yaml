@@ -1,0 +1,7 @@
+interface:
+  display_name: "Codex Task Authoring"
+  short_description: "Author and review implementation-ready engineering tasks"
+  default_prompt: "Use $codex-task-authoring to create or review an implementation-ready engineering task from repository evidence."
+
+policy:
+  allow_implicit_invocation: true

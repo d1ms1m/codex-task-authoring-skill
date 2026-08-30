@@ -1,0 +1,8 @@
+.serena/
+docs/superpowers/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.tmp/
+tests/results/
+dist/
