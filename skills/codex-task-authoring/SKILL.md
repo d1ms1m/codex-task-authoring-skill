@@ -5,7 +5,7 @@ description: Create, revise, or review implementation-ready engineering task spe
 
 # Codex Task Authoring
 
-Produce a decision-complete engineering handoff while preserving the implementer's freedom over equivalent internal choices.
+Produce a decision-complete engineering handoff while preserving the implementer's freedom over equivalent internal choices. Follow explicit user instructions over skill defaults when they differ, subject to higher-priority instructions.
 
 ## Keep the boundary
 
@@ -13,14 +13,14 @@ Produce a decision-complete engineering handoff while preserving the implementer
 - Do not write to trackers, repositories outside the requested workspace, or other external systems without separate authorization.
 - Do not install skills, plugins, MCP servers, or other tooling as part of task authoring.
 - In Review mode, report findings without editing or replacing the reviewed task unless revision is explicitly requested.
-- When a blocking ambiguity remains, ask one focused question. Stop and wait for the answer before authoring or revising the artifact.
+- In Author or Revise mode, when a blocking ambiguity remains, ask one focused question. Stop and wait for the answer before authoring or revising the artifact. Explain why it blocks the deliverable (for example, permission and acceptance criteria); leave incidental wording to the implementer. In Review mode, report findings and ask only when an authorized decision is needed.
 - Stop after the requested artifact. Do not implement the feature or expand the task into a detailed execution plan.
 - Write the artifact in the user's or project's language. Preserve identifiers, types, statuses, paths, and API names when translation would reduce precision.
 
 ## Select the mode
 
 - **Author:** create a new task from requirements and evidence.
-- **Review:** identify material gaps, contradictions, invented claims, and untestable criteria in an existing task. Separate blockers from revision gaps; when a blocker needs an authorized decision, end with one focused question that would resolve it.
+- **Review:** identify material gaps, contradictions, invented claims, and untestable criteria in an existing task. Separate blockers from revision gaps. A task that permits changing approved scope or public contract contrary to assigned authority has a blocker, not a revision gap; prioritize that boundary over subjective presentation gaps. If conflicting requested scope remains in the reviewed task, ask which boundary governs the revision rather than silently resolving the contradiction. Keep questions out of the findings. Only when a blocker needs an authorized decision, end with one focused question about the highest-impact unresolved decision; do not bundle unrelated decisions into one question. Otherwise report the findings without a question, or say that no material findings remain.
 - **Revise:** update an existing task from review findings or new decisions without silently dropping earlier requirements.
 - **API delta:** create a separate description of backend capabilities that are absent or must change. It may accompany Author or Revise.
 
@@ -47,7 +47,7 @@ For Author or Revise, adapt [assets/task-template.md](assets/task-template.md). 
 1. **Identify the artifact.** Confirm mode, target path if any, profile, language, and whether API delta is separate.
 2. **Inspect targeted evidence.** Read recognized instruction files first, then relevant architecture docs, existing task conventions, code, types, routes, API clients, tests, fixtures, and user-designated sources. Do not scan unrelated credentials or the entire repository.
 3. **Build a requirement map.** Separate desired outcome, current baseline, explicit decisions, hard constraints, unchanged behavior, dependencies, unknowns, conflicts, and required contract changes.
-4. **Resolve ambiguity proportionally.** Search assigned sources before asking. Ask one question when unknown answers would change scope, authorization, persistence, public contracts, or mutually incompatible behavior. Label a safe assumption when the choice is reversible and does not change those boundaries.
+4. **Resolve ambiguity proportionally.** Search assigned sources before asking. For unchanged established conventions, reference the existing contract or implementation; do not invent their missing details or pause solely to restate every edge case. Complete the authorized work when those details are not needed to decide the requested outcome. Ask one question only when plausible answers to an unresolved decision would change scope, authorization, persistence, a required public contract, or mutually incompatible behavior. Label a safe assumption when the choice is reversible and does not change those boundaries.
 5. **Author or review decision-first.** Put outcome and boundaries before implementation detail. Include only sections that carry a requirement or review finding.
 6. **Create API delta when justified.** Describe only absent or changed capability; refer to unchanged contracts rather than reproducing them.
 7. **Run the quality gate.** Check profile-specific risks, ambiguity classes, observable acceptance, and the two-implementer test.

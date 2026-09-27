@@ -14,7 +14,7 @@ These checks cover packaging, resource discoverability, invocation metadata, fix
 
 ## Forward-test procedure
 
-For each directory under `fixtures/`:
+For each directory under `fixtures/` (including `convention-reuse-task` for established conventions, `user-override-task` for explicit user instructions, and `review-no-blocker` for question-free Review):
 
 1. Start a fresh Codex task with the built skill available.
 2. Provide only `request.md`, `context.md`, and any additional input file in that fixture.
@@ -24,4 +24,4 @@ For each directory under `fixtures/`:
 
 For implicit invocation, use the prompts in `trigger-cases.md` without naming the skill. A positive case passes only if task-authoring behavior is visible. A negative case passes only if the skill does not divert an implementation, debugging, discovery, or generic editing request into specification authoring.
 
-Generated wording and section order may differ. Judge routing, decisions, boundaries, and testability.
+Generated wording and section order may differ. Judge routing, decisions, boundaries, and testability. Run fresh tasks for each selected model; keep evidence of omissions and rerun a failed scenario before attributing it to a stable model change. Prompt-injected resources in an isolated read-only Codex session test output behavior, not installed-skill discovery or implicit activation.

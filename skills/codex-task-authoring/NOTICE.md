@@ -16,8 +16,9 @@ is a community source and is not presented as OpenAI guidance.
 Current claims about Codex skills and OpenAI model guidance are based on
 official documentation:
 
-- https://learn.chatgpt.com/docs/build-skills
-- https://developers.openai.com/api/docs/guides/latest-model
+- https://developers.openai.com/codex/skills
+- https://developers.openai.com/api/docs/guides/latest-model.md
+- https://developers.openai.com/api/docs/guides/latest-model/gpt-6-astra.md#prompting-best-practices
 - https://github.com/openai/skills/tree/main/skills/.system/skill-creator
 
 The optional `npx skills` installation path is provided by the independent

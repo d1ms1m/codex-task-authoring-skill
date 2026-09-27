@@ -80,24 +80,25 @@ In a Codex message, run:
 $skill-installer Install the skill from https://github.com/d1ms1m/codex-task-authoring-skill/tree/master/skills/codex-task-authoring
 ```
 
-To pin the version, use a release tag URL instead of `master`:
+To pin an already published version instead of following `master`, use its tag URL (for example, `v0.1.0`):
 
 ```text
 $skill-installer Install the skill from https://github.com/d1ms1m/codex-task-authoring-skill/tree/v0.1.0/skills/codex-task-authoring
 ```
 
-The skill is available on your next turn. If it does not appear, restart Codex. See the official OpenAI [Build skills documentation](https://learn.chatgpt.com/docs/build-skills).
+The skill is available on your next turn. If it does not appear, restart Codex. See the official OpenAI [Codex skills documentation](https://developers.openai.com/codex/skills).
 
-Standalone skills are supported by Codex. Current OpenAI guidance prefers plugin packaging when distributing reusable skills broadly; plugin packaging is intentionally outside the `0.1.x` scope of this repository.
+Codex supports standalone skills. OpenAI recommends plugins for distributing reusable skills beyond one repository or alongside other skills or connectors; this repository currently ships a standalone skill.
 
 ## Repository layout
 
 - `skills/codex-task-authoring/` — installable skill, metadata, references, and output templates;
 - `tests/fixtures/` — profile, ambiguity, and review forward-test inputs;
 - `tests/rubrics/task-quality.md` — observable behavioral invariants;
-- `tests/forward-test-report.md` — versioned blind forward-test and trigger-audit evidence;
+- `tests/forward-test-report.md` — versioned blind forward-test evidence and the historical trigger audit;
+- `docs/releases/v0.1.1.md` — release notes and verification results;
 - `tests/test_repository_contract.py` — deterministic packaging and hygiene checks;
-- `docs/design.md` — approved product direction and rationale.
+- `docs/design.md` — historical design for the original 0.1.0 release.
 
 ## Validation
 
@@ -115,7 +116,7 @@ Run the current `quick_validate.py` bundled with OpenAI's `skill-creator` agains
 - The skill cannot resolve a contract-changing conflict that is absent from authoritative sources; it asks one focused question and stops.
 - It does not guarantee that community installers, model defaults, prices, product availability, or API behavior remain current.
 - It is documentation-oriented and read-only toward product code and external systems by default.
-- Version `0.1.0` uses rubric-based forward tests rather than a brittle exact-output harness.
+- Version `0.1.1` uses rubric-based forward tests rather than a brittle exact-output harness. Existing unchanged command conventions can be referenced without inventing or restating every edge case; genuine contract or permission conflicts still require a focused question.
 
 ## Development and validation
 

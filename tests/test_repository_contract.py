@@ -30,8 +30,13 @@ REQUIRED_SKILL_FILES = {
 FIXTURES = {
     "frontend-task": {"request.md", "context.md", "expected-behavior.md"},
     "backend-task": {"request.md", "context.md", "expected-behavior.md"},
+    "convention-reuse-task": {"request.md", "context.md", "expected-behavior.md"},
+    "user-override-task": {"request.md", "context.md", "expected-behavior.md"},
     "fullstack-task": {"request.md", "context.md", "expected-behavior.md"},
     "ambiguous-task": {"request.md", "context.md", "expected-behavior.md"},
+    "review-no-blocker": {
+        "request.md", "context.md", "input-task.md", "expected-behavior.md",
+    },
     "review-task": {
         "request.md",
         "context.md",
@@ -135,6 +140,7 @@ class RepositoryContractTests(unittest.TestCase):
             self.assertIn(concept, russian_text)
 
         self.assertIn("docs-ai-prd", notice.read_text(encoding="utf-8"))
+        self.assertIn("0.1.1", changelog.read_text(encoding="utf-8"))
         self.assertIn("0.1.0", changelog.read_text(encoding="utf-8"))
         self.assertIn("MIT License", license_file.read_text(encoding="utf-8"))
 
@@ -187,7 +193,7 @@ class RepositoryContractTests(unittest.TestCase):
                 ),
                 (
                     "In a Codex message, run:",
-                    "To pin the version",
+                    "To pin an already published version",
                     "next turn",
                     "restart Codex",
                 ),
@@ -213,7 +219,7 @@ class RepositoryContractTests(unittest.TestCase):
                 ),
                 (
                     "В сообщении Codex запустите:",
-                    "Чтобы зафиксировать версию",
+                    "Чтобы зафиксировать уже опубликованную версию",
                     "следующем сообщении",
                     "перезапустите Codex",
                 ),
@@ -314,12 +320,49 @@ class RepositoryContractTests(unittest.TestCase):
         self.assertIn("unittest discover -s tests -p 'test_*.py' -v", text)
         self.assertIn("quick_validate.py", text)
 
+    def test_explicit_user_instructions_take_precedence_over_skill_defaults(self) -> None:
+        text = self.read_required("SKILL.md").lower()
+        self.assertIn("explicit user instructions", text)
+        self.assertIn("skill defaults", text)
+        self.assertIn("higher-priority instructions", text)
+
+    def test_current_codex_guidance_is_cited_in_active_docs(self) -> None:
+        codex_skills = "https://developers.openai.com/codex/skills"
+        readmes = ((ROOT / "README.md"), (ROOT / "README.ru.md"))
+        for path in (*readmes, SKILL_ROOT / "references/openai-tasking-guidance.md"):
+            with self.subTest(path=path.name):
+                self.assertIn(codex_skills, path.read_text(encoding="utf-8"))
+
+    def test_installation_does_not_point_at_an_unpublished_tag(self) -> None:
+        unpublished = "/tree/v0.1.1/skills/codex-task-authoring"
+        for name in ("README.md", "README.ru.md"):
+            self.assertNotIn(unpublished, (ROOT / name).read_text(encoding="utf-8"))
+
     def test_blocking_ambiguity_stops_authoring_until_answered(self) -> None:
         text = self.read_required("SKILL.md").lower()
+        self.assertIn("in author or revise mode, when a blocking ambiguity remains", text)
         self.assertRegex(
             text,
             r"ask one (?:focused )?question[^.]*\.\s*stop and wait for the answer",
         )
+
+    def test_blocking_question_explains_affected_decision(self) -> None:
+        text = self.read_required("SKILL.md").lower()
+        self.assertIn("why it blocks the deliverable", text)
+
+    def test_review_does_not_bundle_multiple_decisions_into_one_question(self) -> None:
+        text = self.read_required("SKILL.md").lower()
+        self.assertIn("highest-impact unresolved decision", text)
+        self.assertIn("do not bundle unrelated decisions", text)
+        self.assertIn("only when a blocker needs an authorized decision", text)
+        self.assertIn("approved scope or public contract", text)
+        self.assertIn("keep questions out of the findings", text)
+        self.assertIn("conflicting requested scope", text)
+
+    def test_unchanged_conventions_do_not_require_speculative_questions(self) -> None:
+        text = self.read_required("SKILL.md").lower()
+        self.assertIn("unchanged established conventions", text)
+        self.assertIn("do not invent their missing details", text)
 
     def test_forward_test_evidence_covers_behavioral_contract(self) -> None:
         report = ROOT / "tests" / "forward-test-report.md"
@@ -328,9 +371,12 @@ class RepositoryContractTests(unittest.TestCase):
         for concept in (
             "frontend-task",
             "backend-task",
+            "convention-reuse-task",
+            "user-override-task",
             "fullstack-task",
             "ambiguous-task",
             "review-task",
+            "review-no-blocker",
             "api delta",
             "non-mutation",
             "false positive",

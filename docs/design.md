@@ -1,6 +1,6 @@
 # Проект глобального навыка `codex-task-authoring`
 
-> Статус: согласованное направление, готово к переносу и реализации в отдельном публичном репозитории
+> Статус: исторический дизайн версии 0.1.0; актуальный контракт — в `skills/codex-task-authoring/SKILL.md` и его references
 >
 > Дата: 2026-08-29
 >
@@ -58,7 +58,7 @@
 
 Основные официальные источники:
 
-- [GPT-5.6 prompting guide](https://developers.openai.com/api/docs/guides/latest-model)
+- [GPT-5.6 prompting guide (historical reference)](https://developers.openai.com/api/docs/guides/latest-model/gpt-5.6.md)
 - [официальный репозиторий навыков OpenAI](https://github.com/openai/skills/tree/main/skills/.curated/openai-docs)
 
 Навык должен использовать `openai-docs`, если этот системный навык доступен и запрос действительно зависит от текущих свойств моделей или продуктов OpenAI. Если он недоступен, допустим переход к официальной документации OpenAI. Обычное составление задачи не должно зависеть от доступа к сети.
