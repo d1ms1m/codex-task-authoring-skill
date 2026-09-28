@@ -80,10 +80,10 @@ npx skills update
 $skill-installer Install the skill from https://github.com/d1ms1m/codex-task-authoring-skill/tree/master/skills/codex-task-authoring
 ```
 
-Чтобы зафиксировать уже опубликованную версию вместо `master`, используйте URL её тега (например, `v0.1.0`):
+Чтобы зафиксировать уже опубликованную версию вместо `master`, используйте URL её тега (например, `v0.1.1`):
 
 ```text
-$skill-installer Install the skill from https://github.com/d1ms1m/codex-task-authoring-skill/tree/v0.1.0/skills/codex-task-authoring
+$skill-installer Install the skill from https://github.com/d1ms1m/codex-task-authoring-skill/tree/v0.1.1/skills/codex-task-authoring
 ```
 
 Skill станет доступен в следующем сообщении. Если он не появился, перезапустите Codex. Подробнее — в официальной документации OpenAI [Codex skills](https://developers.openai.com/codex/skills).

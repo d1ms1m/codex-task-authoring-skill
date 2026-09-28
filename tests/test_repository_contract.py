@@ -152,7 +152,7 @@ class RepositoryContractTests(unittest.TestCase):
             "skills/codex-task-authoring"
         )
         github_tag_url = github_master_url.replace(
-            "/tree/master/", "/tree/v0.1.0/"
+            "/tree/master/", "/tree/v0.1.1/"
         )
         codex_prompts = (
             f"$skill-installer Install the skill from {github_master_url}",
@@ -333,10 +333,10 @@ class RepositoryContractTests(unittest.TestCase):
             with self.subTest(path=path.name):
                 self.assertIn(codex_skills, path.read_text(encoding="utf-8"))
 
-    def test_installation_does_not_point_at_an_unpublished_tag(self) -> None:
-        unpublished = "/tree/v0.1.1/skills/codex-task-authoring"
+    def test_installation_points_at_published_release(self) -> None:
+        published = "/tree/v0.1.1/skills/codex-task-authoring"
         for name in ("README.md", "README.ru.md"):
-            self.assertNotIn(unpublished, (ROOT / name).read_text(encoding="utf-8"))
+            self.assertIn(published, (ROOT / name).read_text(encoding="utf-8"))
 
     def test_blocking_ambiguity_stops_authoring_until_answered(self) -> None:
         text = self.read_required("SKILL.md").lower()

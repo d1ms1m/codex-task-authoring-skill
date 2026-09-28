@@ -80,10 +80,10 @@ In a Codex message, run:
 $skill-installer Install the skill from https://github.com/d1ms1m/codex-task-authoring-skill/tree/master/skills/codex-task-authoring
 ```
 
-To pin an already published version instead of following `master`, use its tag URL (for example, `v0.1.0`):
+To pin an already published version instead of following `master`, use its tag URL (for example, `v0.1.1`):
 
 ```text
-$skill-installer Install the skill from https://github.com/d1ms1m/codex-task-authoring-skill/tree/v0.1.0/skills/codex-task-authoring
+$skill-installer Install the skill from https://github.com/d1ms1m/codex-task-authoring-skill/tree/v0.1.1/skills/codex-task-authoring
 ```
 
 The skill is available on your next turn. If it does not appear, restart Codex. See the official OpenAI [Codex skills documentation](https://developers.openai.com/codex/skills).
